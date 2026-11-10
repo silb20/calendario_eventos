@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/216960cfff.js" crossorigin="anonymous"></script>
+    <title>Calendario</title>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .contenedor {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+
+        .imagen {
+            width: 160px;
+            height: 288px;
+        }
+
+        img {
+            display: block;
+            border-radius: .5rem;
+            justify-items: center;
+            height: 100%;
+            width: auto;
+        }
+
+        table {
+            border-collapse: separate;
+            color: darkslategray;
+            border-radius: .5rem;
+            border: 1px solid;
+            width: 580px;
+            height: 360px;
+        }
+
+        th,
+        td {
+            text-align: center;
+            position: relative;
+        }
+
+        thead>tr>th {
+            background-color: white;
+            height: 72px;
+            font-size: 30px;
+            border: 1px solid;
+            border-radius: .5rem;
+            box-shadow: 0px 0px 6px darkslategray;
+            scroll-margin-top: 155px;
+        }
+
+        tbody>tr>td,
+        tbody>tr>th {
+            background-color: white;
+            font-size: 20px;
+            border: 1px solid;
+            border-radius: .5rem;
+            box-shadow: 0px 0px 6px darkslategray;
+            width: 60px;
+            height: 36px;
+        }
+
+        h1 {
+            color: darkslategray;
+            text-align: center;
+            padding: .5rem;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgb(198, 213, 228);
+            z-index: 999;
+        }
+
+        nav {
+            height: 80px;
+        }
+
+        .menu-items {
+            width: 60%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin: auto;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        .li-items {
+            width: 16%;
+            height: 40%;
+            border: 1px solid darkslategray;
+            background-color: white;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .li-items>a {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            color: darkslategray;
+            font-weight: bold;
+            padding: 6.5px;
+        }
+
+        .li-items:hover {
+            box-shadow: 0px 0px 10px darkslategray;
+        }
+
+        .li-items>a:hover {
+            background-color: darkslategray;
+            color: white;
+        }
+
+        main {
+            padding-top: 152px;
+            padding-bottom: 343px;
+        }
+
+        section {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            margin: 0 auto 2rem;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        footer {
+            background-color: rgb(198, 213, 228);
+            height: 50px;
+            align-content: space-evenly;
+        }
+
+        footer p {
+            color: darkslategray;
+            text-align: center;
+        }
+
+        table:hover {
+            box-shadow: 0 0 10px darkslategray;
+        }
+
+        td:hover,
+        th:hover {
+            color: white;
+            background-color: darkslategray;
+        }
+
+        .agenda {
+            position: absolute;
+            height: auto;
+            width: max-content;
+            min-width: 250px;
+            border: 1px solid;
+            z-index: 999;
+            background-color: white;
+            left: 100%;
+            top: 0;
+            color: darkslategray;
+            border-radius: .5rem;
+            padding: .5rem 1rem;
+            flex-direction: column;
+            text-align: start;
+            box-shadow: 0 2px 9px darkslategray;
+        }
+
+        #add_event,
+        #edit_event,
+        #show_event {
+            padding: 1rem;
+            width: 400px;
+            left: calc(50% - 175px);
+            top: calc(50% - 90px);
+            border: 1px solid darkslategray;
+            border-radius: .5rem;
+            box-shadow: 0 0 5px darkslategray;
+            position: relative;
+        }
+
+        .fila {
+            padding: .5rem;
+            display: flex;
+            gap: 1rem;
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .fila label {
+            font-size: 1.1rem;
+        }
+
+        .fila input,
+        .fila textarea {
+            border: 1px solid;
+            border-radius: .4rem;
+            padding: .2rem .4rem;
+        }
+
+        .fila textarea {
+            width: 200px;
+        }
+
+        .notif-evento {
+            border: 1px solid;
+            border-radius: 50%;
+            aspect-ratio: 1 / 1;
+            display: block;
+            width: 35%;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+            background-color: darkslategray;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        td:hover .notif-evento {
+            color: darkslategray;
+            background-color: white;
+        }
+
+        .lista-elemento {
+            margin: .5rem;
+            border-bottom: 1px solid;
+            padding-bottom: .5rem;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .lista-elemento:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .lista-elemento span {
+            font-size: 1.1rem;
+        }
+
+        .lista-elemento .fila {
+            padding: 0;
+            width: fit-content;
+            gap: 0.3rem;
+            margin: 0 1rem;
+        }
+
+        #btn_new,
+        #btn_event,
+        #btn_confirmar, #btn_editar, #btn_borrar {
+            margin: 1rem auto;
+            padding: .2rem .5rem;
+            color: white;
+            background-color: darkslategray;
+            border: 1px solid;
+            border-radius: .5rem;
+            width: fit-content;
+            display: block;
+        }
+
+        .fila-boton {
+            width: fit-content;
+        }
+
+        #title-date,
+        #title-date2,
+        #title-event {
+            text-align: center;
+            color: darkslategray;
+            margin: 1rem 0;
+        }
+
+        .info {
+            font-size: 1.1rem;
+            margin: 1rem;
+        }
+
+        #info_descripcion,
+        #info_fecha {
+            margin-left: 1rem;
+        }
+
+        #btn_cancelar,
+        #btn_cancelar2,
+        #btn_cancelar3,
+        #btn_cerrar {
+            border: none;
+            background-color: transparent;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 1.2rem;
+            color: darkslategray;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .lista-eventos {
+            margin-top: .5rem;
+        }
+
+
+        /* Está hecho con la idea de que en un futuro se pueda añadir la opción de ventanas emergentes donde el usuario pueda escribir notas en cada día, un poco a modo de agenda */
+        /* En ese caso, añadiría un cursor:pointer; en td:hover y th:hover, pero ahora mismo no tiene mucho sentido ya que no sucede nada al clickar */
+    </style>
+</head>
+
+<body>
+    <div class="contenedor">
+        <header>
+            <h1>CALENDARIO 2026</h1>
+            <nav>
+                <ul class="menu-items">
+                    <li class="li-items"><a href="#mes1">Enero</a></li>
+                    <li class="li-items"><a href="#mes2">Febrero</a></li>
+                    <li class="li-items"><a href="#mes3">Marzo</a></li>
+                    <li class="li-items"><a href="#mes4">Abril</a></li>
+                    <li class="li-items"><a href="#mes5">Mayo</a></li>
+                    <li class="li-items"><a href="#mes6">Junio</a></li>
+                    <li class="li-items"><a href="#mes7">Julio</a></li>
+                    <li class="li-items"><a href="#mes8">Agosto</a></li>
+                    <li class="li-items"><a href="#mes9">Septiembre</a></li>
+                    <li class="li-items"><a href="#mes10">Octubre</a></li>
+                    <li class="li-items"><a href="#mes11">Noviembre</a></li>
+                    <li class="li-items"><a href="#mes12">Diciembre</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <section>
+                <article>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="8" id="mes1">ENERO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mes_1">
+                            <tr>
+                                <th>L</th>
+                                <th>M</th>
+                                <th>X</th>
+                                <th>J</th>
+                                <th>V</th>
+                                <th>S</th>
+                                <th>D</th>
+                                <th rowspan="7" class="imagen"><img src="imgs/winter 3.jpg" alt="imagen de invierno">
+                                </th>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td id="prueba">1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>6</td>
+                                <td>7</td>
+                                <td>8</td>
+                                <td>9</td>
+                                <td>10</td>
+                                <td>11</td>
+                            </tr>
+                            <tr>
+                                <td>12</td>
+                                <td>13</td>
+                                <td>14</td>
+                                <td>15</td>
+                                <td>16</td>
+                                <td>17</td>
+                                <td>18</td>
+                            </tr>
+                            <tr>
+                                <td>19</td>
+                                <td>20</td>
+                                <td>21</td>
+                                <td>22</td>
+                                <td>23</td>
+                                <td>24</td>
+                                <td>25</td>
+                            </tr>
+                            <tr>
+                                <td>26</td>
+                                <td>27</td>
+                                <td>28</td>
+                                <td>29</td>
+                                <td>30</td>
+                                <td>31</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </article>
+                <article>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="8" id="mes2">FEBRERO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mes_2">
+                            <tr>
+                                <th>L</th>
+                                <th>M</th>
+                                <th>X</th>
+                                <th>J</th>
+                                <th>V</th>
+                                <th>S</th>
+                                <th>D</th>
+                                <th rowspan="7" class="imagen"><img src="imgs/winter 2.jpg" alt="imagen de invierno">
+                                </th>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                                <td>5</td>
+                                <td>6</td>
+                                <td>7</td>
+                                <td>8</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>10</td>
+                                <td>11</td>
+                                <td>12</td>
+                                <td>13</td>
+                                <td>14</td>
+                                <td>15</td>
+                            </tr>
+                            <tr>
+                                <td>16</td>
+                                <td>17</td>
+                                <td>18</td>
+                                <td>19</td>
+                                <td>20</td>
+                                <td>21</td>
+                                <td>22</td>
+                            </tr>
+                            <tr>
+                                <td>23</td>
+                                <td>24</td>
+                                <td>25</td>
+                                <td>26</td>
+                                <td>27</td>
+                                <td>28</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+            </section>
+            <section>
+                <article>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="8" id="mes3">MARZO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mes_3">
+                            <tr>
+                                <th>L</th>
+                                <th>M</th>
+                                <th>X</th>
+                                <th>J</th>
+                                <th>V</th>
+                                <th>S</th>
+                                <th>D</th>
+                                <th rowspan="7" class="imagen"><img src="imgs/spring 1(1).jpg"
+                                        alt="imagen de primavera"></th>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                                <td>5</td>
+                                <td>6</td>
+                                <td>7</td>
+                                <td>8</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>10</td>
+                                <td>11</td>
+                                <td>12</td>
+                                <td>13</td>
+                                <td>14</td>
+                                <td>15</td>
+                            </tr>
+                            <tr>
+                                <td>16</td>
+                                <td>17</td>
+                                <td>18</td>
+                                <td>19</td>
+                                <td>20</td>
+                                <td>21</td>
+                                <td>22</td>
+                            </tr>
+                            <tr>
+                                <td>23</td>
+                                <td>24</td>
+                                <td>25</td>
+                                <td>26</td>
+                                <td>27</td>
+                                <td>28</td>
+                                <td>29</td>
+                            </tr>
+                            <tr>
+                                <td>30</td>
+                                <td>31</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+                <article>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="8" id="mes4">ABRIL</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mes_4">
+                            <tr>
+                                <th>L</th>
+                                <th>M</th>
+                                <th>X</th>
+                                <th>J</th>
+                                <th>V</th>
+                                <th>S</th>
+                                <th>D</th>
+                                <th rowspan="7" class="imagen"><img src="imgs/spring 2(1).jpg"
+                                        alt="imagen de primavera"></th>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                                <td>5</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>7</td>
+                                <td>8</td>
+                                <td>9</td>
+                                <td>10</td>
+                                <td>11</td>
+                                <td>12</td>
+                            </tr>
+                            <tr>
+                                <td>13</td>
+                                <td>14</td>
+                                <td>15</td>
+                                <td>16</td>
+                                <td>17</td>
+                                <td>18</td>
+                                <td>19</td>
+                            </tr>
+                            <tr>
+                                <td>20</td>
+                                <td>21</td>
+                                <td>22</td>
+                                <td>23</td>
+                                <td>24</td>
+                                <td>25</td>
+                                <td>26</td>
+                            </tr>
+                            <tr>
+                                <td>27</td>
+                                <td>28</td>
+                                <td>29</td>
+                                <td>30</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+            </section>
+            <section>
+                <article>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="8" id="mes5">MAYO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mes_5">
+                            <tr>
+                                <th>L</th>
+                                <th>M</th>
+                                <th>X</th>
+                                <th>J</th>
+                                <th>V</th>
+                                <th>S</th>
+                                <th>D</th>
+                                <th rowspan="7" class="imagen"><img src="imgs/spring 3.jpg" alt="imagen de primavera">
+                                </th>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>5</td>
+                                <td>6</td>
+                                <td>7</td>
+                                <td>8</td>
+                                <td>9</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td>11</td>
+                                <td>12</td>
+                                <td>13</td>
+                                <td>14</td>
+                                <td>15</td>
+                                <td>16</td>
+                                <td>17</td>
+                            </tr>
+                            <tr>
+                                <td>18</td>
+                                <td>19</td>
+                                <td>20</td>
+                                <td>21</td>
+                                <td>22</td>
+                                <td>23</td>
+                                <td>24</td>
+                            </tr>
+                            <tr>
+                                <td>25</td>
+                                <td>26</td>
+                                <td>27</td>
+                                <td>28</td>
+                                <td>29</td>
+                                <td>30</td>
+                                <td>31</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+                <article>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="8" id="mes6">JUNIO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mes_6">
+                            <tr>
+                                <th>L</th>
+                                <th>M</th>
+                                <th>X</th>
+                                <th>J</th>
+                                <th>V</th>
+                                <th>S</th>
+                                <th>D</th>
+                                <th rowspan="7" class="imagen"><img src="imgs/summer 1.jpg" alt="imagen de verano"></th>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                                <td>5</td>
+                                <td>6</td>
+                                <td>7</td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>9</td>
+                                <td>10</td>
+                                <td>11</td>
+                                <td>12</td>
+                                <td>13</td>
+                                <td>14</td>
+                            </tr>
+                            <tr>
+                                <td>15</td>
+                                <td>16</td>
+                                <td>17</td>
+                                <td>18</td>
+                                <td>19</td>
+                                <td>20</td>
+                                <td>21</td>
+                            </tr>
+                            <tr>
+                                <td>22</td>
+                                <td>23</td>
+                                <td>24</td>
+                                <td>25</td>
+                                <td>26</td>
+                                <td>27</td>
+                                <td>28</td>
+                            </tr>
+                            <tr>
+                                <td>29</td>
+                                <td>30</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+            </section>
+            <section>
+                <article>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="8" id="mes7">JULIO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mes_7">
+                            <tr>
+                                <th>L</th>
+                                <th>M</th>
+                                <th>X</th>
+                                <th>J</th>
+                                <th>V</th>
+                                <th>S</th>
+                                <th>D</th>
+                                <th rowspan="7" class="imagen"><img src="imgs/summer 3.jpg" alt="imagen de verano"></th>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                                <td>5</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>7</td>
+                                <td>8</td>
+                                <td>9</td>
+                                <td>10</td>
+                                <td>11</td>
+                                <td>12</td>
+                            </tr>
+                            <tr>
+                                <td>13</td>
+                                <td>14</td>
+                                <td>15</td>
+                                <td>16</td>
+                                <td>17</td>
+                                <td>18</td>
+                                <td>19</td>
+                            </tr>
+                            <tr>
+                                <td>20</td>
+                                <td>21</td>
+                                <td>22</td>
+                                <td>23</td>
+                                <td>24</td>
+                                <td>25</td>
+                                <td>26</td>
+                            </tr>
+                            <tr>
+                                <td>27</td>
+                                <td>28</td>
+                                <td>29</td>
+                                <td>30</td>
+                                <td>31</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+                <article>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="8" id="mes8">AGOSTO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mes_8">
+                            <tr>
+                                <th>L</th>
+                                <th>M</th>
+                                <th>X</th>
+                                <th>J</th>
+                                <th>V</th>
+                                <th>S</th>
+                                <th>D</th>
+                                <th rowspan="7" class="imagen"><img src="imgs/summer 2.jpg" alt="imagen de verano"></th>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>1</td>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>4</td>
+                                <td>5</td>
+                                <td>6</td>
+                                <td>7</td>
+                                <td>8</td>
+                                <td>9</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>11</td>
+                                <td>12</td>
+                                <td>13</td>
+                                <td>14</td>
+                                <td>15</td>
+                                <td>16</td>
+                            </tr>
+                            <tr>
+                                <td>17</td>
+                                <td>18</td>
+                                <td>19</td>
+                                <td>20</td>
+                                <td>21</td>
+                                <td>22</td>
+                                <td>23</td>
+                            </tr>
+                            <tr>
+                                <td>24</td>
+                                <td>25</td>
+                                <td>26</td>
+                                <td>27</td>
+                                <td>28</td>
+                                <td>29</td>
+                                <td>30</td>
+                            </tr>
+                            <tr>
+                                <td>31</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+            </section>
+            <section>
+                <article>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="8" id="mes9">SEPTIEMBRE</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mes_9">
+                            <tr>
+                                <th>L</th>
+                                <th>M</th>
+                                <th>X</th>
+                                <th>J</th>
+                                <th>V</th>
+                                <th>S</th>
+                                <th>D</th>
+                                <th rowspan="7" class="imagen"><img src="imgs/fall 2.jpg" alt="imagen de otoño"></th>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                                <td>5</td>
+                                <td>6</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>8</td>
+                                <td>9</td>
+                                <td>10</td>
+                                <td>11</td>
+                                <td>12</td>
+                                <td>13</td>
+                            </tr>
+                            <tr>
+                                <td>14</td>
+                                <td>15</td>
+                                <td>16</td>
+                                <td>17</td>
+                                <td>18</td>
+                                <td>19</td>
+                                <td>20</td>
+                            </tr>
+                            <tr>
+                                <td>21</td>
+                                <td>22</td>
+                                <td>23</td>
+                                <td>24</td>
+                                <td>25</td>
+                                <td>26</td>
+                                <td>27</td>
+                            </tr>
+                            <tr>
+                                <td>28</td>
+                                <td>29</td>
+                                <td>30</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+                <article>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="8" id="mes10">OCTUBRE</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mes_10">
+                            <tr>
+                                <th>L</th>
+                                <th>M</th>
+                                <th>X</th>
+                                <th>J</th>
+                                <th>V</th>
+                                <th>S</th>
+                                <th>D</th>
+                                <th rowspan="7" class="imagen"><img src="imgs/fall 1.jpg" alt="imagen de otoño"></th>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>6</td>
+                                <td>7</td>
+                                <td>8</td>
+                                <td>9</td>
+                                <td>10</td>
+                                <td>11</td>
+                            </tr>
+                            <tr>
+                                <td>12</td>
+                                <td>13</td>
+                                <td>14</td>
+                                <td>15</td>
+                                <td>16</td>
+                                <td>17</td>
+                                <td>18</td>
+                            </tr>
+                            <tr>
+                                <td>19</td>
+                                <td>20</td>
+                                <td>21</td>
+                                <td>22</td>
+                                <td>23</td>
+                                <td>24</td>
+                                <td>25</td>
+                            </tr>
+                            <tr>
+                                <td>26</td>
+                                <td>27</td>
+                                <td>28</td>
+                                <td>29</td>
+                                <td>30</td>
+                                <td>31</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+            </section>
+            <section>
+                <article>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="8" id="mes11">NOVIEMBRE</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mes_11">
+                            <tr>
+                                <th>L</th>
+                                <th>M</th>
+                                <th>X</th>
+                                <th>J</th>
+                                <th>V</th>
+                                <th>S</th>
+                                <th>D</th>
+                                <th rowspan="7" class="imagen"><img src="imgs/fall 3.jpg" alt="imagen de otoño"></th>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                                <td>5</td>
+                                <td>6</td>
+                                <td>7</td>
+                                <td>8</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>10</td>
+                                <td>11</td>
+                                <td>12</td>
+                                <td>13</td>
+                                <td>14</td>
+                                <td>15</td>
+                            </tr>
+                            <tr>
+                                <td>16</td>
+                                <td>17</td>
+                                <td>18</td>
+                                <td>19</td>
+                                <td>20</td>
+                                <td>21</td>
+                                <td>22</td>
+                            </tr>
+                            <tr>
+                                <td>23</td>
+                                <td>24</td>
+                                <td>25</td>
+                                <td>26</td>
+                                <td>27</td>
+                                <td>28</td>
+                                <td>29</td>
+                            </tr>
+                            <tr>
+                                <td>30</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+                <article>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="8" id="mes12">DICIEMBRE</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mes_12">
+                            <tr>
+                                <th>L</th>
+                                <th>M</th>
+                                <th>X</th>
+                                <th>J</th>
+                                <th>V</th>
+                                <th>S</th>
+                                <th>D</th>
+                                <th rowspan="7" class="imagen"><img src="imgs/winter 1.jpg" alt="imagen de invierno">
+                                </th>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                                <td>5</td>
+                                <td>6</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>8</td>
+                                <td>9</td>
+                                <td>10</td>
+                                <td>11</td>
+                                <td>12</td>
+                                <td>13</td>
+                            </tr>
+                            <tr>
+                                <td>14</td>
+                                <td>15</td>
+                                <td>16</td>
+                                <td>17</td>
+                                <td>18</td>
+                                <td>19</td>
+                                <td>20</td>
+                            </tr>
+                            <tr>
+                                <td>21</td>
+                                <td>22</td>
+                                <td>23</td>
+                                <td>24</td>
+                                <td>25</td>
+                                <td>26</td>
+                                <td>27</td>
+                            </tr>
+                            <tr>
+                                <td>28</td>
+                                <td>29</td>
+                                <td>30</td>
+                                <td>31</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+            </section>
+            <dialog id="add_event">
+                <h2 id="title-date"></h2>
+                <div class="fila">
+                    <label for="in_event_name">Nombre de Evento</label>
+                    <input type="text" id="in_event_name">
+                </div>
+                <div class="fila">
+                    <label for="in_date">Fecha de Evento</label>
+                    <input type="date" id="in_date">
+                </div>
+                <div class="fila">
+                    <label for="in_descripcion">Nota</label>
+                    <textarea id="in_descripcion"></textarea>
+                </div>
+                <button type="button" id="btn_event">Guardar</button>
+                <button type="button" id="btn_cancelar" title="Cancelar"><span
+                        class="fa-solid fa-xmark"></span></button>
+            </dialog>
+            <dialog id="edit_event">
+                <h2 id="title-date2"></h2>
+                <input type="hidden" name="" id="id_evento">
+                <div class="fila">
+                    <label for="in_event_name2">Nombre de Evento</label>
+                    <input type="text" id="in_event_name2">
+                </div>
+                <div class="fila">
+                    <label for="in_date2">Fecha de Evento</label>
+                    <input type="date" id="in_date2">
+                </div>
+                <div class="fila">
+                    <label for="in_descripcion2">Nota</label>
+                    <textarea id="in_descripcion2"></textarea>
+                </div>
+                <button type="button" id="btn_confirmar">Confirmar cambios</button>
+                <button type="button" id="btn_cancelar2" title="Cancelar"><span
+                        class="fa-solid fa-xmark"></span></button>
+            </dialog>
+            <dialog id="show_event">
+                <h2 id="title-event"></h2>
+                <p class="info">Fecha: <span id="info_fecha"></span></p>
+                <p class="info">Nota: <span id="info_descripcion"></span></p>
+                <div class="fila fila-boton">
+                    <button type="button" id="btn_editar">Editar evento</button>
+                    <button type="button" id="btn_borrar">Borrar evento</button>
+                </div>
+                <button type="button" id="btn_cancelar3" title="Cancelar"><span
+                        class="fa-solid fa-xmark"></span></button>
+            </dialog>
+        </main>
+        <footer>
+            <p>Web creada con Visual Studio Code</p>
+            <p>Silvia Beut &copy;</p>
+        </footer>
+
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
+
+<!-- El copyright del footer lo he puesto para probar las entidades -->
